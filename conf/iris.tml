@@ -1,0 +1,15 @@
+# 当按下 Ctrl + C 时，禁止关闭当前程序，也就是不会终止程序的运行
+DisableInterruptHandler = false
+# 路径重新定义，默认关闭。
+DisablePathCorrection = false
+# 转义路径
+EnablePathEscape = false
+# 不允许重新指向方法
+FireMethodNotAllowed = true
+# 如果此字段设置为 true，则将创建一个新缓冲区以从请求主体读取
+DisableBodyConsumptionOnUnmarshal = false
+# 设置时间格式
+TimeFormat = "2018-10-24 14:50:30"
+Charset = "UTF-8"
+[Other]
+    ServerName = "xdhuxc"

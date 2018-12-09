@@ -1,0 +1,2 @@
+[xorm] [info]  2018/10/26 16:57:51.263690 [SQL] INSERT INTO `user` (`user_name`,`password`,`email`,`age`,`create_time`,`update_time`) VALUES (?, ?, ?, ?, ?, ?) []interface {}{"xdhuxc", "Xdhuxc163", "xdhuxc@163.com", 24, "2018-10-26 16:57:51", "2018-10-26 16:57:51"} - took: 11.9693ms
+[xorm] [info]  2018/10/26 16:57:51.265713 [SQL] SELECT `user_id`, `user_name`, `password`, `email`, `age`, `create_time`, `update_time` FROM `user` WHERE `user_name`=? LIMIT 1 []interface {}{"xdhuxc"} - took: 2.0225ms
