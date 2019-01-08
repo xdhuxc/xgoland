@@ -1,29 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/siddontang/go-mysql/mysql"
 	"github.com/siddontang/go-mysql/replication"
 	"github.com/sirupsen/logrus"
-	"strconv"
-	"strings"
+	"os"
 )
-
-func convert(b []uint8) string {
-	s := make([]string, len(b))
-	for i := range b {
-		s[i] = strconv.Itoa(int(b[i]))
-	}
-	return strings.Join(s, "")
-}
-
-func B2S(bs []uint8) string {
-	ba := []byte{}
-	for _, b := range bs {
-		ba = append(ba, byte(b))
-	}
-	return string(ba)
-}
 
 func main() {
 
@@ -51,14 +35,19 @@ func main() {
 	}
 
 	for {
-		events := streamer.DumpEvents()
-		for _, v := range events {
-			fmt.Println(v.Header)
-			fmt.Println(string(v.RawData[:]))
-			fmt.Println(convert(v.RawData))
-			fmt.Println(v.RawData)
-			fmt.Println(B2S(v.RawData))
+		ev, err := streamer.GetEvent(context.Background())
+
+		if err != nil {
+			logrus.Error("Gets event error, ", err)
 		}
+
+		// 输出 event
+		ev.Dump(os.Stdout)
+		fmt.Println("---------------------------------------------------")
+
+		fmt.Println(ev.Header)
+		fmt.Println(ev.Event)
+		fmt.Println(ev.RawData)
 	}
 
 }
