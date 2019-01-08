@@ -12,7 +12,7 @@ import (
 func main() {
 
 	cfg := replication.BinlogSyncerConfig{
-		ServerID: 65535,
+		ServerID: 1,
 		Flavor:   "mysql",
 		Host:     "52.221.216.74",
 		Port:     3307,
@@ -44,10 +44,6 @@ func main() {
 		// 输出 event
 		ev.Dump(os.Stdout)
 		fmt.Println("---------------------------------------------------")
-
-		fmt.Println(ev.Header)
-		fmt.Println(ev.Event)
-		fmt.Println(ev.RawData)
 	}
 
 }

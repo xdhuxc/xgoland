@@ -12,7 +12,7 @@ import (
 func main() {
 
 	cfg := replication.BinlogSyncerConfig{
-		ServerID: 65535,
+		ServerID: 1,
 		Flavor:   "mysql",
 		Host:     "52.221.216.74",
 		Port:     3307,
