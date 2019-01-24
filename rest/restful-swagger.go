@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/emicklei/go-restful"
-	"github.com/emicklei/go-restful-swagger12"
+	"github.com/emicklei/go-restful-openapi"
+	"github.com/go-openapi/spec"
 	"log"
 	"net/http"
 )
@@ -12,13 +13,53 @@ type Book struct {
 	Author string
 }
 
+func swagger(c *restful.Container) {
+	config := restfulspec.Config{
+		WebServices:                   c.RegisteredWebServices(),
+		WebServicesURL:                "http://0.0.0.0:8081",
+		APIPath:                       "/apidocs.json",
+		PostBuildSwaggerObjectHandler: enrichSwaggerObject,
+	}
+
+	c.Handle("/apidocs", http.StripPrefix("/apidocs", http.FileServer(http.Dir("dist"))))
+	c.Add(restfulspec.NewOpenAPIService(config))
+}
+
+func enrichSwaggerObject(swagger *spec.Swagger) {
+	swagger.Info = &spec.Info{
+		InfoProps: spec.InfoProps{
+			Title:       "Xdhuxc APIServer",
+			Description: "Resource for managing xdhuxc API",
+			Contact: &spec.ContactInfo{
+				Name:  "xdhuxc",
+				Email: "xdhuxc@163.com",
+				URL:   "http://xdhuxc.club",
+			},
+			License: &spec.License{
+				Name: "MIT",
+				URL:  "http://mit.org",
+			},
+			Version: "1.0.0",
+		},
+	}
+	swagger.Tags = []spec.Tag{
+		spec.Tag{
+			TagProps: spec.TagProps{
+				Name:        "users",
+				Description: "Managing users",
+			},
+		},
+	}
+}
+
 func main() {
 	ws := new(restful.WebService)
 	ws.Path("/books").
 		Consumes(restful.MIME_XML, restful.MIME_JSON).
 		Produces(restful.MIME_XML, restful.MIME_JSON)
 
-	restful.Add(ws)
+	container := restful.NewContainer()
+	container.Add(ws)
 
 	ws.Route(ws.GET("/{medium}").
 		To(noop).
@@ -33,19 +74,12 @@ func main() {
 		Param(ws.PathParameter("medium", "digital or paperback").DataType("string")).
 		Reads(Book{}))
 
-	config := swagger.Config{
-		WebServices:     restful.DefaultContainer.RegisteredWebServices(),
-		WebServicesUrl:  "http://localhost:8080",
-		ApiPath:         "/apidocs.json",
-		SwaggerPath:     "/apidocs/",
-		SwaggerFilePath: "/Users/wanghuan/GolandProjects/GoPath/src/github.com/xdhuxc/xgoland/dist",
-		ApiVersion:      "2.0",
-	}
-	swagger.RegisterSwaggerService(config, restful.DefaultContainer)
+	swagger(container)
+	//swagger.RegisterSwaggerService(config, restful.DefaultContainer)
 	log.Print("Start listening on localhost:8080")
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: restful.DefaultContainer,
+		Handler: container,
 	}
 	log.Fatal(server.ListenAndServe())
 
