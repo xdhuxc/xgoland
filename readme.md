@@ -1,34 +1,15 @@
-### 参考资料
-1、golang 操作 mysql 数据库
+### golang 操作 mysql 数据库
 
-https://www.jianshu.com/p/340eb943be2e
+使用 gorm 框架
 
-```
-db, err := sql.Open("mysql", "root:19940423@tcp(127.0.0.1:3306)/xgolang?parseTime=true")
-	if err != nil {
-		log.Fatal(err)
-	}
+参考链接：
 
-	if db != nil {
-		fmt.Println(db)
-	}
-	/**
-		调用 sql.Close() 函数释放连接
-		使用 defer 语句设置释放连接
-	 */
-	defer db.Close()
-	queryString := "insert into user (username, password, age) values ('xdhuxc', 'Xdhuxc123', 24)"
-	result, err := db.Exec(queryString)
-	if err != nil {
-		log.Fatal(err)
-	}
-	rowCount, err := result.RowsAffected()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("插入了 %d 行。", rowCount)
-```
+http://gorm.io/
 
-2、xorm 资料
+### swagger 的使用
 
-http://xorm.io/docs
+1、下载 swagger-ui
+
+https://github.com/swagger-api/swagger-ui.git
+
+2、复制 dist 目录到项目目录下，将项目中 SwaggerFilePath 字段的值设置为 dist 目录
