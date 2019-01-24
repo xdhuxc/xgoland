@@ -2,14 +2,14 @@ package main
 
 import (
 	"github.com/emicklei/go-restful"
-	restfulspec "github.com/emicklei/go-restful-openapi"
+	"github.com/emicklei/go-restful-openapi"
 	"net/http"
 )
 
 type User struct {
-	ID string `json:"id" description:"identifier of the user"`
+	ID   string `json:"id" description:"identifier of the user"`
 	Name string `json:"name" description:"name of the user" default:"xdhuxc"`
-	Age int `json:"age" description:"age of the user" default:"21"`
+	Age  int    `json:"age" description:"age of the user" default:"21"`
 }
 
 type UserResource struct {
@@ -46,9 +46,11 @@ func main() {
 	restful.DefaultContainer.Add(u.WebService())
 
 	config := restfulspec.Config{
-		WebServices: restful.RegisteredWebServices(),
-		APIPath: "/apidocs.json",
-		PostBuildSwaggerObjectHandler:
+		WebServices:                   restful.RegisteredWebServices(),
+		APIPath:                       "/apidocs.json",
+		PostBuildSwaggerObjectHandler: enrichSwaggerObject,
 	}
+
+	restful.DefaultContainer.Add(restfulspec.NewOpenAPIService(config))
 
 }
